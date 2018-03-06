@@ -1,0 +1,30 @@
+{
+  "name": "gepur-it/rabbitmq-bundle",
+  "description": "RabbitMQ connection bundle",
+  "type": "symfony-bundle",
+  "keywords": [
+    "symfony",
+    "rabbitmq"
+  ],
+  "homepage": "https://github.com/gepur-it/rabbitmq-bundle",
+  "require": {
+    "ext-amqp": "*",
+    "php": "^7.0",
+    "symfony/dependency-injection": ">=4.0",
+    "symfony/config": ">=4.0",
+    "symfony/yaml": ">=4.0",
+    "symfony/http-kernel": ">=4.0"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Andrii Yakovlev",
+      "email": "yawa20@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "GepurIt\\RabbitMQBundle\\": ""
+    }
+  }
+}
