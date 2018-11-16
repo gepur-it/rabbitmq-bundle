@@ -6,26 +6,16 @@
 
 namespace GepurIt\RabbitMqBundle\Configurator;
 
-use GepurIt\RabbitMqBundle\Rabbit;
-
 /**
  * Class BaseConfigurator
  * @package GepurIt\RabbitMqBundle
  */
-abstract class DeadDeferredConfigurator implements ConfiguratorInterface
+abstract class AbstractDeadDeferredConfigurator implements ConfiguratorInterface
 {
-    /** @var Rabbit  */
-    private $rabbit;
-
     /**
-     * Helper constructor.
-     *
-     * @param Rabbit  $rabbit
+     * @return string
      */
-    public function __construct(Rabbit $rabbit)
-    {
-        $this->rabbit = $rabbit;
-    }
+    abstract public function getDeferred(): string;
 
     /**
      * @return \AMQPQueue
@@ -35,7 +25,7 @@ abstract class DeadDeferredConfigurator implements ConfiguratorInterface
      */
     public function getQueue(): \AMQPQueue
     {
-        $queue = new \AMQPQueue($this->rabbit->getChannel());
+        $queue = new \AMQPQueue($this->getRabbit()->getChannel());
         $queue->setName($this->getName());
         $queue->setFlags(AMQP_DURABLE);
         $queue->setArgument('x-dead-letter-exchange', $this->getDeferred());
@@ -54,7 +44,7 @@ abstract class DeadDeferredConfigurator implements ConfiguratorInterface
      */
     public function getExchange(): \AMQPExchange
     {
-        $channel = $this->rabbit->getChannel();
+        $channel = $this->getRabbit()->getChannel();
 
         $deferredExchange = new \AMQPExchange($channel);
         $deferredExchange->setName($this->getDeferred());
@@ -84,26 +74,30 @@ abstract class DeadDeferredConfigurator implements ConfiguratorInterface
     }
 
     /**
-     * @return string
-     */
-    abstract  public function getName(): string;
-
-    /**
-     * @return string
-     */
-    abstract public function getDeferred(): string;
-
-
-    /**
-     * @param string $message
+     * @param string      $message
+     *
+     * @param null|string $routingKey
      *
      * @throws \AMQPChannelException
      * @throws \AMQPConnectionException
      * @throws \AMQPExchangeException
      * @throws \AMQPQueueException
      */
-    public function publish(string $message)
+    public function publish(string $message, ?string $routingKey = null)
     {
-        $this->getExchange()->publish($message, $this->getName());
+        $routingKey = $routingKey??$this->getName();
+        $this->getExchange()->publish($message, $routingKey);
+    }
+
+    /**
+     * @param callable $callback
+     *
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     * @throws \AMQPQueueException
+     */
+    public function consume(callable $callback)
+    {
+        $this->getQueue()->consume($callback);
     }
 }

@@ -6,6 +6,8 @@
 
 namespace GepurIt\RabbitMqBundle\Configurator;
 
+use GepurIt\RabbitMqBundle\Rabbit;
+
 /**
  * Class ConfiguratorInterface
  * @package GepurIt\RabbitMqBundle\Configurator
@@ -34,20 +36,24 @@ interface ConfiguratorInterface
      */
     public function getName(): string;
 
-        /**
-     * @param string $message
+    /**
+     * @param string      $message
+     *
+     * @param null|string $routingKey
      *
      * @throws \AMQPChannelException
      * @throws \AMQPConnectionException
      * @throws \AMQPExchangeException
      * @throws \AMQPQueueException
      */
-    public function publish(string $message);
+    public function publish(string $message, ?string $routingKey = null);
 
     /**
      * @param callable $callback
      *
-     * @return mixed
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     * @throws \AMQPQueueException
      */
     public function consume(callable $callback);
 
@@ -55,4 +61,9 @@ interface ConfiguratorInterface
      * @return int
      */
     public function getTtl():int;
+
+    /**
+     * @return Rabbit
+     */
+    public function getRabbit(): Rabbit;
 }
