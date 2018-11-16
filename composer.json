@@ -32,7 +32,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "GepurIt\\RabbitMqBundle\\": ""
+      "GepurIt\\RabbitMqBundle\\":  "src"
     }
   }
 }
