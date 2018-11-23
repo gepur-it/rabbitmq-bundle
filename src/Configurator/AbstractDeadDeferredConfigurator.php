@@ -67,6 +67,7 @@ abstract class AbstractDeadDeferredConfigurator implements ConfiguratorInterface
         $queue->setName($this->getName());
         $queue->setFlags(AMQP_DURABLE);
         $queue->setArgument('x-dead-letter-exchange', $this->getDeferred());
+        $queue->setArgument('x-dead-letter-routing-key', $this->getDeferred());
         $queue->declareQueue();
         $queue->bind($this->getName(), $this->getName());
 
