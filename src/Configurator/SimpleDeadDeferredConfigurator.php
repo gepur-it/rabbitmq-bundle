@@ -17,6 +17,15 @@ class SimpleDeadDeferredConfigurator extends AbstractDeadDeferredConfigurator
     /** @var int  */
     private $ttl;
 
+    /** @var RabbitInterface */
+    private $rabbit;
+
+    /** @var string */
+    private $name;
+
+    /** @var null|string */
+    private $deferred;
+
     /**
      * SimpleDeadDeferredConfigurator constructor.
      *
@@ -27,9 +36,10 @@ class SimpleDeadDeferredConfigurator extends AbstractDeadDeferredConfigurator
      */
     public function __construct(RabbitInterface $rabbit, int $ttl, string $name, ?string $deferred)
     {
+        $this->rabbit = $rabbit;
         $this->ttl = $ttl;
-
-        parent::__construct($rabbit, $name, $deferred);
+        $this->name = $name;
+        $this->deferred = $deferred;
     }
 
     /**
@@ -37,11 +47,11 @@ class SimpleDeadDeferredConfigurator extends AbstractDeadDeferredConfigurator
      */
     public function getDeferred(): string
     {
-        if (null === parent::getDeferred()) {
-           return $this->getName().'_deferred';
+        if (null === $this->deferred) {
+            $this->deferred = $this->getName().'_deferred';
         }
 
-        return parent::getDeferred();
+        return $this->deferred;
     }
 
     /**
@@ -50,5 +60,21 @@ class SimpleDeadDeferredConfigurator extends AbstractDeadDeferredConfigurator
     public function getTtl(): int
     {
         return $this->ttl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return RabbitInterface
+     */
+    public function getRabbit(): RabbitInterface
+    {
+        return $this->rabbit;
     }
 }
