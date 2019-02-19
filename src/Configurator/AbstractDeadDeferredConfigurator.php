@@ -15,7 +15,7 @@ abstract class AbstractDeadDeferredConfigurator implements ConfiguratorInterface
     /**
      * @return string
      */
-    abstract public function getDeferred(): string;
+    abstract public function getDeferred(): ?string;
 
     /**
      * @return \AMQPQueue
@@ -28,8 +28,11 @@ abstract class AbstractDeadDeferredConfigurator implements ConfiguratorInterface
         $queue = new \AMQPQueue($this->getRabbit()->getChannel());
         $queue->setName($this->getName());
         $queue->setFlags(AMQP_DURABLE);
-        $queue->setArgument('x-dead-letter-exchange', $this->getDeferred());
-        $queue->setArgument('x-dead-letter-routing-key', $this->getDeferred());
+
+        if (null !== $this->getDeferred()) {
+            $queue->setArgument('x-dead-letter-exchange', $this->getDeferred());
+            $queue->setArgument('x-dead-letter-routing-key', $this->getDeferred());
+        }
         $queue->declareQueue();
 
         return $queue;
@@ -46,17 +49,6 @@ abstract class AbstractDeadDeferredConfigurator implements ConfiguratorInterface
     {
         $channel = $this->getRabbit()->getChannel();
 
-        $deferredExchange = new \AMQPExchange($channel);
-        $deferredExchange->setName($this->getDeferred());
-        $deferredExchange->setType(AMQP_EX_TYPE_FANOUT);
-        $deferredExchange->declareExchange();
-        $deferredQueue = new \AMQPQueue($channel);
-        $deferredQueue->setName($this->getDeferred());
-        $deferredQueue->setArgument('x-dead-letter-exchange', $this->getName());
-        $deferredQueue->setArgument('x-message-ttl', $this->getTtl());
-        $deferredQueue->declareQueue();
-        $deferredQueue->bind($this->getDeferred(), $this->getName());
-
         $exchange = new \AMQPExchange($channel);
         $exchange->setName($this->getName());
         $exchange->setType(AMQP_EX_TYPE_DIRECT);
@@ -66,8 +58,23 @@ abstract class AbstractDeadDeferredConfigurator implements ConfiguratorInterface
         $queue = new \AMQPQueue($channel);
         $queue->setName($this->getName());
         $queue->setFlags(AMQP_DURABLE);
-        $queue->setArgument('x-dead-letter-exchange', $this->getDeferred());
-        $queue->setArgument('x-dead-letter-routing-key', $this->getDeferred());
+
+        if (null !== $this->getDeferred()) {
+            $deferredExchange = new \AMQPExchange($channel);
+            $deferredExchange->setName($this->getDeferred());
+            $deferredExchange->setType(AMQP_EX_TYPE_FANOUT);
+            $deferredExchange->declareExchange();
+            $deferredQueue = new \AMQPQueue($channel);
+            $deferredQueue->setName($this->getDeferred());
+            $deferredQueue->setArgument('x-dead-letter-exchange', $this->getName());
+            $deferredQueue->setArgument('x-message-ttl', $this->getTtl());
+            $deferredQueue->declareQueue();
+            $deferredQueue->bind($this->getDeferred(), $this->getName());
+
+            $queue->setArgument('x-dead-letter-exchange', $this->getDeferred());
+            $queue->setArgument('x-dead-letter-routing-key', $this->getDeferred());
+        }
+
         $queue->declareQueue();
         $queue->bind($this->getName(), $this->getName());
 
@@ -100,5 +107,16 @@ abstract class AbstractDeadDeferredConfigurator implements ConfiguratorInterface
     public function consume(callable $callback)
     {
         $this->getQueue()->consume($callback);
+    }
+
+    /**
+     * @param string      $message
+     * @param null|string $routingKey
+     *
+     * @return mixed|void
+     */
+    public function push(string $message, ?string $routingKey = null)
+    {
+        $this->getRabbit()->persist($this, $message, $routingKey);
     }
 }

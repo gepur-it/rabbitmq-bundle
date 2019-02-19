@@ -66,4 +66,12 @@ interface ConfiguratorInterface
      * @return Rabbit
      */
     public function getRabbit(): Rabbit;
+
+    /**
+     * @param string      $message
+     * @param null|string $routingKey
+     *
+     * @return mixed
+     */
+    public function push(string $message, ?string $routingKey = null);
 }

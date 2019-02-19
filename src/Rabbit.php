@@ -10,6 +10,7 @@ use AMQPConnection;
 use AMQPChannel;
 use AMQPExchange;
 use AMQPQueue;
+use GepurIt\RabbitMqBundle\Configurator\ConfiguratorInterface;
 
 /**
  * Class Rabbit
@@ -26,6 +27,14 @@ class Rabbit
     /** @var AMQPExchange[] */
     private $exchanges = [];
 
+    /** @var Cocainum[]  */
+    private $cocainums = [];
+
+    /**
+     * Rabbit constructor.
+     *
+     * @param $params
+     */
     public function __construct($params)
     {
         $this->connection = new AMQPConnection($params);
@@ -90,5 +99,28 @@ class Rabbit
         $queue->declareQueue();
 
         return $queue;
+    }
+
+    /**
+     * @param ConfiguratorInterface $configurator
+     * @param string                $message
+     * @param null                  $routingKey
+     */
+    public function persist(ConfiguratorInterface $configurator, string $message, ?$routingKey = null)
+    {
+        $this->cocainums[] = new Cocainum($configurator, $message, $routingKey);
+    }
+
+    /**
+     * @throws \AMQPChannelException
+     * @throws \AMQPConnectionException
+     * @throws \AMQPExchangeException
+     * @throws \AMQPQueueException
+     */
+    public function flush()
+    {
+        while ($cocainum = array_shift($this->cocainums)) {
+            $cocainum->getConfigurator()->publish($cocainum->getMessage(), $cocainum->getRoutingKey());
+        }
     }
 }
