@@ -34,7 +34,7 @@ class SimpleDeadDeferredConfigurator extends AbstractDeadDeferredConfigurator
      * @param int         $ttl
      * @param null|string $deferred
      */
-    public function __construct(RabbitInterface $rabbit, int $ttl, string $name, ?string $deferred)
+    public function __construct(RabbitInterface $rabbit, int $ttl, string $name, ?string $deferred = null)
     {
         $this->rabbit = $rabbit;
         $this->ttl = $ttl;
@@ -45,12 +45,8 @@ class SimpleDeadDeferredConfigurator extends AbstractDeadDeferredConfigurator
     /**
      * @return string
      */
-    public function getDeferred(): string
+    public function getDeferred(): ?string
     {
-        if (null === $this->deferred) {
-            $this->deferred = $this->getName().'_deferred';
-        }
-
         return $this->deferred;
     }
 
