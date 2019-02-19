@@ -3,6 +3,7 @@
 namespace GepurIt\RabbitMqBundle\DependencyInjection;
 
 use GepurIt\RabbitMqBundle\Rabbit;
+use GepurIt\RabbitMqBundle\RabbitInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -33,7 +34,12 @@ class RabbitMqExtension extends BaseExtension
         foreach ($config['connections'] as $name => $params) {
             $this->loadRabbit($name, $params, $container);
         }
-        $container->addAliases(['rabbit_mq' => 'rabbit_mq.'.$defaultConnection]);
+        $container->addAliases(
+            [
+                'rabbit_mq'   => 'rabbit_mq.'.$defaultConnection,
+                RabbitInterface::class => 'rabbit_mq.'.$defaultConnection,
+            ]
+        );
     }
 
     /**

@@ -16,7 +16,7 @@ use GepurIt\RabbitMqBundle\Configurator\ConfiguratorInterface;
  * Class Rabbit
  * @package RabbitMqBundle
  */
-class Rabbit
+class Rabbit implements RabbitInterface
 {
     /** @var AMQPConnection */
     private $connection;
@@ -44,7 +44,7 @@ class Rabbit
      * @return AMQPChannel
      * @throws \AMQPConnectionException
      */
-    public function getChannel()
+    public function getChannel(): AMQPChannel
     {
         if (null !== $this->channel && $this->channel->isConnected()) {
             return $this->channel;
@@ -66,7 +66,7 @@ class Rabbit
      * @throws \AMQPExchangeException
      * @throws \AMQPQueueException
      */
-    public function getExchange(string $exchangeName)
+    public function getExchange(string $exchangeName): AMQPExchange
     {
         if (isset($this->exchanges[$exchangeName])) {
             return $this->exchanges[$exchangeName];
@@ -91,7 +91,7 @@ class Rabbit
      * @throws \AMQPConnectionException
      * @throws \AMQPQueueException
      */
-    public function getQueue(string $queueName)
+    public function getQueue(string $queueName): AMQPQueue
     {
         $queue = new AMQPQueue($this->getChannel());
         $queue->setName($queueName);
@@ -106,7 +106,7 @@ class Rabbit
      * @param string                $message
      * @param null|string           $routingKey
      */
-    public function persist(ConfiguratorInterface $configurator, string $message, ?string $routingKey = null)
+    public function persist(ConfiguratorInterface $configurator, string $message, ?string $routingKey = null): void
     {
         $this->cocainums[] = new Cocainum($configurator, $message, $routingKey);
     }
@@ -117,7 +117,7 @@ class Rabbit
      * @throws \AMQPExchangeException
      * @throws \AMQPQueueException
      */
-    public function flush()
+    public function flush(): void
     {
         while ($cocainum = array_shift($this->cocainums)) {
             $cocainum->getConfigurator()->publish($cocainum->getMessage(), $cocainum->getRoutingKey());
