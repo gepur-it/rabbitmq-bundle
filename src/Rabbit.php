@@ -104,9 +104,9 @@ class Rabbit
     /**
      * @param ConfiguratorInterface $configurator
      * @param string                $message
-     * @param null                  $routingKey
+     * @param null|string           $routingKey
      */
-    public function persist(ConfiguratorInterface $configurator, string $message, ?$routingKey = null)
+    public function persist(ConfiguratorInterface $configurator, string $message, ?string $routingKey = null)
     {
         $this->cocainums[] = new Cocainum($configurator, $message, $routingKey);
     }
