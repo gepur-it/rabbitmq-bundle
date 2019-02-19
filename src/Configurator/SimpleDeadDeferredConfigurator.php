@@ -14,7 +14,7 @@ use GepurIt\RabbitMqBundle\RabbitInterface;
  */
 class SimpleDeadDeferredConfigurator extends AbstractDeadDeferredConfigurator
 {
-    /** @var int  */
+    /** @var int */
     private $ttl;
 
     /** @var RabbitInterface */
@@ -29,17 +29,17 @@ class SimpleDeadDeferredConfigurator extends AbstractDeadDeferredConfigurator
     /**
      * SimpleDeadDeferredConfigurator constructor.
      *
-     * @param string      $name
-     * @param RabbitInterface      $rabbit
-     * @param int         $ttl
-     * @param null|string $deferred
+     * @param string          $name
+     * @param RabbitInterface $rabbit
+     * @param null|string     $deferred
+     * @param null|int        $ttl
      */
-    public function __construct(RabbitInterface $rabbit, int $ttl, string $name, ?string $deferred = null)
+    public function __construct(RabbitInterface $rabbit, string $name, ?string $deferred = null, ?int $ttl = null)
     {
-        $this->rabbit = $rabbit;
-        $this->ttl = $ttl;
-        $this->name = $name;
+        $this->rabbit   = $rabbit;
+        $this->name     = $name;
         $this->deferred = $deferred;
+        $this->ttl      = (null !== $ttl) ? $ttl : 0;
     }
 
     /**
