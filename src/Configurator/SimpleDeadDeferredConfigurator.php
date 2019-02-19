@@ -14,17 +14,8 @@ use GepurIt\RabbitMqBundle\RabbitInterface;
  */
 class SimpleDeadDeferredConfigurator extends AbstractDeadDeferredConfigurator
 {
-    /** @var string  */
-    private $name;
-
-    /** @var RabbitInterface  */
-    private $rabbit;
-
     /** @var int  */
     private $ttl;
-
-    /** @var string */
-    private $deferred;
 
     /**
      * SimpleDeadDeferredConfigurator constructor.
@@ -36,18 +27,9 @@ class SimpleDeadDeferredConfigurator extends AbstractDeadDeferredConfigurator
      */
     public function __construct(RabbitInterface $rabbit, int $ttl, string $name, ?string $deferred)
     {
-        $this->name = $name;
-        $this->rabbit = $rabbit;
         $this->ttl = $ttl;
-        $this->deferred = $deferred;
-    }
 
-    /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->name;
+        parent::__construct($rabbit, $name, $deferred);
     }
 
     /**
@@ -55,10 +37,11 @@ class SimpleDeadDeferredConfigurator extends AbstractDeadDeferredConfigurator
      */
     public function getDeferred(): string
     {
-        if (null === $this->deferred) {
-           $this->deferred = $this->name.'_deferred';
+        if (null === parent::getDeferred()) {
+           return $this->getName().'_deferred';
         }
-        return $this->deferred;
+
+        return parent::getDeferred();
     }
 
     /**
@@ -67,13 +50,5 @@ class SimpleDeadDeferredConfigurator extends AbstractDeadDeferredConfigurator
     public function getTtl(): int
     {
         return $this->ttl;
-    }
-
-    /**
-     * @return RabbitInterface
-     */
-    public function getRabbit(): RabbitInterface
-    {
-        return $this->rabbit;
     }
 }

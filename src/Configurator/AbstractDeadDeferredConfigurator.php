@@ -6,6 +6,8 @@
 
 namespace GepurIt\RabbitMqBundle\Configurator;
 
+use GepurIt\RabbitMqBundle\RabbitInterface;
+
 /**
  * Class BaseConfigurator
  * @package GepurIt\RabbitMqBundle
@@ -13,9 +15,58 @@ namespace GepurIt\RabbitMqBundle\Configurator;
 abstract class AbstractDeadDeferredConfigurator implements ConfiguratorInterface
 {
     /**
+     * @var RabbitInterface
+     */
+    private $rabbit;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var null|string
+     */
+    private $deferred;
+
+    /**
+     * AbstractDeadDeferredConfigurator constructor.
+     *
+     * @param RabbitInterface $rabbit
+     * @param string          $name
+     * @param null|string     $deferred
+     */
+    public function __construct(RabbitInterface $rabbit, string $name, ?string $deferred = null)
+    {
+        $this->rabbit = $rabbit;
+        $this->name = $name;
+        $this->deferred = $deferred;
+    }
+
+    /**
      * @return string
      */
-    abstract public function getDeferred(): ?string;
+    public function getDeferred(): ?string
+    {
+        return $this->deferred;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+
+    /**
+     * @return RabbitInterface
+     */
+    public function getRabbit(): RabbitInterface
+    {
+        return $this->rabbit;
+    }
 
     /**
      * @return \AMQPQueue
