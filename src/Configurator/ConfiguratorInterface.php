@@ -6,7 +6,7 @@
 
 namespace GepurIt\RabbitMqBundle\Configurator;
 
-use GepurIt\RabbitMqBundle\Rabbit;
+use GepurIt\RabbitMqBundle\RabbitInterface;
 
 /**
  * Class ConfiguratorInterface
@@ -63,9 +63,9 @@ interface ConfiguratorInterface
     public function getTtl():int;
 
     /**
-     * @return Rabbit
+     * @return RabbitInterface
      */
-    public function getRabbit(): Rabbit;
+    public function getRabbit(): RabbitInterface;
 
     /**
      * @param string      $message

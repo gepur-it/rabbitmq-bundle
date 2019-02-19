@@ -6,7 +6,7 @@
 
 namespace GepurIt\RabbitMqBundle\Configurator;
 
-use GepurIt\RabbitMqBundle\Rabbit;
+use GepurIt\RabbitMqBundle\RabbitInterface;
 
 /**
  * Class SimpleDeadDeferredConfigurator
@@ -17,7 +17,7 @@ class SimpleDeadDeferredConfigurator extends AbstractDeadDeferredConfigurator
     /** @var string  */
     private $name;
 
-    /** @var Rabbit  */
+    /** @var RabbitInterface  */
     private $rabbit;
 
     /** @var int  */
@@ -30,11 +30,11 @@ class SimpleDeadDeferredConfigurator extends AbstractDeadDeferredConfigurator
      * SimpleDeadDeferredConfigurator constructor.
      *
      * @param string      $name
-     * @param Rabbit      $rabbit
+     * @param RabbitInterface      $rabbit
      * @param int         $ttl
      * @param null|string $deferred
      */
-    public function __construct(Rabbit $rabbit, int $ttl, string $name, ?string $deferred)
+    public function __construct(RabbitInterface $rabbit, int $ttl, string $name, ?string $deferred)
     {
         $this->name = $name;
         $this->rabbit = $rabbit;
@@ -70,9 +70,9 @@ class SimpleDeadDeferredConfigurator extends AbstractDeadDeferredConfigurator
     }
 
     /**
-     * @return Rabbit
+     * @return RabbitInterface
      */
-    public function getRabbit(): Rabbit
+    public function getRabbit(): RabbitInterface
     {
         return $this->rabbit;
     }
