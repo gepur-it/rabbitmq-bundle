@@ -35,8 +35,10 @@ interface ConfiguratorInterface
      * @param string      $message
      *
      * @param null|string $routingKey
+     *
+     * @return bool
      */
-    public function publish(string $message, ?string $routingKey = null);
+    public function publish(string $message, ?string $routingKey = null): bool;
 
     /**
      * @param callable $callback
