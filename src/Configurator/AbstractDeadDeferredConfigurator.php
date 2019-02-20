@@ -18,6 +18,7 @@ abstract class AbstractDeadDeferredConfigurator implements ConfiguratorInterface
     abstract public function getDeferred(): ?string;
 
     /**
+     * @internal use consume() instead
      * @return \AMQPQueue
      * @throws \AMQPChannelException
      * @throws \AMQPConnectionException
@@ -39,6 +40,7 @@ abstract class AbstractDeadDeferredConfigurator implements ConfiguratorInterface
     }
 
     /**
+     * @internal use publish() instead
      * @return \AMQPExchange
      * @throws \AMQPChannelException
      * @throws \AMQPConnectionException
