@@ -31,4 +31,9 @@ interface RabbitInterface
      * Flush all persist messages
      */
     public function flush(): void;
+
+    /**
+     * @return bool
+     */
+    public function isClean(): bool;
 }

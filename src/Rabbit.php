@@ -72,4 +72,9 @@ class Rabbit implements RabbitInterface
             $cocainum->getConfigurator()->publish($cocainum->getMessage(), $cocainum->getRoutingKey());
         }
     }
+
+    public function isClean(): bool
+    {
+        return count($this->cocainums) === 0;
+    }
 }
