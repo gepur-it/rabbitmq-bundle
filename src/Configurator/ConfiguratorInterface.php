@@ -16,18 +16,13 @@ interface ConfiguratorInterface
 {
     /**
      * @return \AMQPQueue
-     * @throws \AMQPChannelException
-     * @throws \AMQPConnectionException
-     * @throws \AMQPQueueException
+     * @internal
      */
     public function getQueue(): \AMQPQueue;
 
     /**
      * @return \AMQPExchange
-     * @throws \AMQPChannelException
-     * @throws \AMQPConnectionException
-     * @throws \AMQPExchangeException
-     * @throws \AMQPQueueException
+     * @internal
      */
     public function getExchange(): \AMQPExchange;
 
@@ -40,20 +35,11 @@ interface ConfiguratorInterface
      * @param string      $message
      *
      * @param null|string $routingKey
-     *
-     * @throws \AMQPChannelException
-     * @throws \AMQPConnectionException
-     * @throws \AMQPExchangeException
-     * @throws \AMQPQueueException
      */
     public function publish(string $message, ?string $routingKey = null);
 
     /**
      * @param callable $callback
-     *
-     * @throws \AMQPChannelException
-     * @throws \AMQPConnectionException
-     * @throws \AMQPQueueException
      */
     public function consume(callable $callback);
 
@@ -71,7 +57,7 @@ interface ConfiguratorInterface
      * @param string      $message
      * @param null|string $routingKey
      *
-     * @return mixed
+     * @return void
      */
-    public function push(string $message, ?string $routingKey = null);
+    public function push(string $message, ?string $routingKey = null): void;
 }

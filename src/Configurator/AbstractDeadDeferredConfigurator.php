@@ -113,9 +113,9 @@ abstract class AbstractDeadDeferredConfigurator implements ConfiguratorInterface
      * @param string      $message
      * @param null|string $routingKey
      *
-     * @return mixed|void
+     * @return void
      */
-    public function push(string $message, ?string $routingKey = null)
+    public function push(string $message, ?string $routingKey = null): void
     {
         $this->getRabbit()->persist($this, $message, $routingKey);
     }

@@ -8,8 +8,6 @@ namespace GepurIt\RabbitMqBundle;
 
 use AMQPConnection;
 use AMQPChannel;
-use AMQPExchange;
-use AMQPQueue;
 use GepurIt\RabbitMqBundle\Configurator\ConfiguratorInterface;
 
 /**
@@ -23,9 +21,6 @@ class Rabbit implements RabbitInterface
 
     /** @var AMQPChannel */
     private $channel;
-
-    /** @var AMQPExchange[] */
-    private $exchanges = [];
 
     /** @var Cocainum[]  */
     private $cocainums = [];
@@ -59,49 +54,6 @@ class Rabbit implements RabbitInterface
     }
 
     /**
-     * @param string $exchangeName
-     * @return AMQPExchange //--with getting Queue
-     * @throws \AMQPChannelException
-     * @throws \AMQPConnectionException
-     * @throws \AMQPExchangeException
-     * @throws \AMQPQueueException
-     */
-    public function getExchange(string $exchangeName): AMQPExchange
-    {
-        if (isset($this->exchanges[$exchangeName])) {
-            return $this->exchanges[$exchangeName];
-        }
-        $exchange = new AMQPExchange($this->getChannel());
-        $exchange->setName($exchangeName);
-        $exchange->setType(AMQP_EX_TYPE_DIRECT);
-        $exchange->setFlags(AMQP_DURABLE);
-        $exchange->declareExchange();
-
-        $this->exchanges[$exchangeName] = $exchange;
-        $queue = $this->getQueue($exchangeName);
-        $queue->bind($exchangeName, $exchangeName);
-
-        return $exchange;
-    }
-
-    /**
-     * @param string $queueName
-     * @return AMQPQueue
-     * @throws \AMQPChannelException
-     * @throws \AMQPConnectionException
-     * @throws \AMQPQueueException
-     */
-    public function getQueue(string $queueName): AMQPQueue
-    {
-        $queue = new AMQPQueue($this->getChannel());
-        $queue->setName($queueName);
-        $queue->setFlags(AMQP_DURABLE);
-        $queue->declareQueue();
-
-        return $queue;
-    }
-
-    /**
      * @param ConfiguratorInterface $configurator
      * @param string                $message
      * @param null|string           $routingKey
@@ -112,10 +64,7 @@ class Rabbit implements RabbitInterface
     }
 
     /**
-     * @throws \AMQPChannelException
-     * @throws \AMQPConnectionException
-     * @throws \AMQPExchangeException
-     * @throws \AMQPQueueException
+     * Flush all persist messages
      */
     public function flush(): void
     {

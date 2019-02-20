@@ -7,8 +7,6 @@
 namespace GepurIt\RabbitMqBundle;
 
 use AMQPChannel;
-use AMQPExchange;
-use AMQPQueue;
 use GepurIt\RabbitMqBundle\Configurator\ConfiguratorInterface;
 
 /**
@@ -17,13 +15,20 @@ use GepurIt\RabbitMqBundle\Configurator\ConfiguratorInterface;
  */
 interface RabbitInterface
 {
+    /**
+     * @return AMQPChannel
+     */
     public function getChannel(): AMQPChannel;
 
-    public function getExchange(string $exchangeName): AMQPExchange;
-
-    public function getQueue(string $queueName): AMQPQueue;
-
+    /**
+     * @param ConfiguratorInterface $configurator
+     * @param string                $message
+     * @param null|string           $routingKey
+     */
     public function persist(ConfiguratorInterface $configurator, string $message, ?string $routingKey = null): void;
 
+    /**
+     * Flush all persist messages
+     */
     public function flush(): void;
 }
