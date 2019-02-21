@@ -69,6 +69,7 @@ abstract class AbstractDeadDeferredConfigurator implements ConfiguratorInterface
             $deferredQueue = new \AMQPQueue($channel);
             $deferredQueue->setName($this->getDeferred());
             $deferredQueue->setArgument('x-dead-letter-exchange', $this->getName());
+            $deferredQueue->setArgument('x-dead-letter-routing-key', $this->getName());
             $deferredQueue->setArgument('x-message-ttl', $this->getTtl());
             $deferredQueue->declareQueue();
             $deferredQueue->bind($this->getDeferred(), $this->getName());
