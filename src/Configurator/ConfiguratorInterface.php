@@ -34,7 +34,7 @@ interface ConfiguratorInterface
     /**
      * @param string      $message
      *
-     * @param null|string $routingKey
+     * @param string|null $routingKey
      *
      * @return bool
      */
@@ -43,7 +43,7 @@ interface ConfiguratorInterface
     /**
      * @param callable $callback
      */
-    public function consume(callable $callback);
+    public function consume(callable $callback): void;
 
     /**
      * @return int

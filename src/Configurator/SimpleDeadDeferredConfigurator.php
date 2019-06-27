@@ -12,7 +12,7 @@ use GepurIt\RabbitMqBundle\RabbitInterface;
  * Class SimpleDeadDeferredConfigurator
  * @package GepurIt\RabbitMqBundle\Configurator
  */
-class SimpleDeadDeferredConfigurator extends AbstractDeadDeferredConfigurator
+class SimpleDeadDeferredConfigurator extends AbstractDeadDeferredConfigurator implements ConfiguratorInterface
 {
     /** @var int */
     private $ttl;
@@ -29,10 +29,10 @@ class SimpleDeadDeferredConfigurator extends AbstractDeadDeferredConfigurator
     /**
      * SimpleDeadDeferredConfigurator constructor.
      *
-     * @param string          $name
      * @param RabbitInterface $rabbit
-     * @param null|string     $deferred
-     * @param null|int        $ttl
+     * @param string          $name
+     * @param string|null     $deferred
+     * @param int|null        $ttl
      */
     public function __construct(RabbitInterface $rabbit, string $name, ?string $deferred = null, ?int $ttl = 600000)
     {

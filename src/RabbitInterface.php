@@ -23,7 +23,7 @@ interface RabbitInterface
     /**
      * @param ConfiguratorInterface $configurator
      * @param string                $message
-     * @param null|string           $routingKey
+     * @param string|null           $routingKey
      */
     public function persist(ConfiguratorInterface $configurator, string $message, ?string $routingKey = null): void;
 

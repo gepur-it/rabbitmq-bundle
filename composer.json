@@ -6,15 +6,15 @@
     "symfony",
     "rabbitmq"
   ],
-  "version": "2.0.3",
+  "version": "4.3.0",
   "homepage": "https://github.com/gepur-it/rabbitmq-bundle",
   "require": {
     "ext-amqp": "*",
-    "php": "^7.2",
-    "symfony/dependency-injection": ">=4.0",
-    "symfony/config": ">=4.0",
-    "symfony/yaml": ">=4.0",
-    "symfony/http-kernel": ">=4.0"
+    "php": "^7.3",
+    "symfony/dependency-injection": "^4.3",
+    "symfony/config": "^4.3",
+    "symfony/yaml": "^4.3",
+    "symfony/http-kernel": "^4.3"
   },
   "license": "MIT",
   "authors": [
@@ -35,5 +35,8 @@
     "psr-4": {
       "GepurIt\\RabbitMqBundle\\":  "src"
     }
+  },
+  "require-dev": {
+    "vimeo/psalm": "^3.4"
   }
 }

@@ -17,12 +17,12 @@ class Configuration implements ConfigurationInterface
      *
      * @return TreeBuilder The tree builder
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('rabbit_mq');
+        $treeBuilder = new TreeBuilder('rabbit_mq');
 
-        $rootNode
+
+        $treeBuilder->getRootNode()
             ->children()
                 ->scalarNode('default_connection')->defaultValue('default')->end()
                 ->arrayNode('connections')

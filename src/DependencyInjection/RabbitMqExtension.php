@@ -22,9 +22,12 @@ class RabbitMqExtension extends BaseExtension
      * @param ContainerBuilder $container A ContainerBuilder instance
      * @throws \InvalidArgumentException When provided tag is not defined in this extension
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = $this->getConfiguration($configs, $container);
+        if (null === $configuration) {
+            return;
+        }
         $config = $this->processConfiguration($configuration, $configs);
         $defaultConnection = $config['default_connection'];
         if (!array_key_exists($defaultConnection, $config['connections'])) {
@@ -47,7 +50,7 @@ class RabbitMqExtension extends BaseExtension
      * @param array $params
      * @param ContainerBuilder $container
      */
-    private function loadRabbit($name, array $params, ContainerBuilder $container)
+    private function loadRabbit($name, array $params, ContainerBuilder $container): void
     {
         $definition = new Definition();
         $definition->setClass(Rabbit::class);
