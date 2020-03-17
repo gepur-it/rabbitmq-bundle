@@ -40,6 +40,7 @@ abstract class AbstractDeadDeferredConfigurator implements ConfiguratorInterface
     }
 
     /**
+     * @param string|null routingKey
      * @return \AMQPExchange
      * @throws \AMQPChannelException
      * @throws \AMQPConnectionException
@@ -47,7 +48,7 @@ abstract class AbstractDeadDeferredConfigurator implements ConfiguratorInterface
      * @throws \AMQPQueueException
      * @internal use publish() instead
      */
-    public function getExchange(): \AMQPExchange
+    public function getExchange(?string $routingKey = null): \AMQPExchange
     {
         $channel = $this->getRabbit()->getChannel();
 
@@ -74,14 +75,14 @@ abstract class AbstractDeadDeferredConfigurator implements ConfiguratorInterface
             $deferredQueue->setArgument('x-dead-letter-routing-key', $this->getName());
             $deferredQueue->setArgument('x-message-ttl', $this->getTtl());
             $deferredQueue->declareQueue();
-            $deferredQueue->bind($deferred, $this->getName());
+            $deferredQueue->bind($deferred, $routingKey ?? $this->getName());
 
             $queue->setArgument('x-dead-letter-exchange', $this->getDeferred());
             $queue->setArgument('x-dead-letter-routing-key', $this->getDeferred());
         }
 
         $queue->declareQueue();
-        $queue->bind($this->getName(), $this->getName());
+        $queue->bind($this->getName(), $routingKey ?? $this->getName());
 
         return $exchange;
     }
@@ -101,7 +102,7 @@ abstract class AbstractDeadDeferredConfigurator implements ConfiguratorInterface
     {
         $routingKey = $routingKey ?? $this->getName();
 
-        return $this->getExchange()->publish($message, $routingKey);
+        return $this->getExchange($routingKey)->publish($message, $routingKey);
     }
 
     /**
