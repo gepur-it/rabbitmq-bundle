@@ -6,11 +6,11 @@
     "symfony",
     "rabbitmq"
   ],
-  "version": "5.0.0",
+  "version": "5.1.0",
   "homepage": "https://github.com/gepur-it/rabbitmq-bundle",
   "require": {
     "ext-amqp": "*",
-    "php": "^7.3",
+    "php": "^7.4",
     "symfony/dependency-injection": "^4.3|^5.0",
     "symfony/config": "^4.3|^5.0",
     "symfony/yaml": "^4.3|^5.0",

@@ -3,6 +3,7 @@
  * @author: Andrii yakovlev <yawa20@gmail.com>
  * @since : 16.11.18
  */
+declare(strict_types=1);
 
 namespace GepurIt\RabbitMqBundle\Configurator;
 
@@ -14,17 +15,10 @@ use GepurIt\RabbitMqBundle\RabbitInterface;
  */
 class SimpleDeadDeferredConfigurator extends AbstractDeadDeferredConfigurator implements ConfiguratorInterface
 {
-    /** @var int */
-    private $ttl;
-
-    /** @var RabbitInterface */
-    private $rabbit;
-
-    /** @var string */
-    private $name;
-
-    /** @var null|string */
-    private $deferred;
+    private int $ttl;
+    private RabbitInterface $rabbit;
+    private string $name;
+    private ?string $deferred = null;
 
     /**
      * SimpleDeadDeferredConfigurator constructor.

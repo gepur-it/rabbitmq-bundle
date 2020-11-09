@@ -3,6 +3,7 @@
  * @author: Andrii yakovlev <yawa20@gmail.com>
  * @since : 16.11.18
  */
+declare(strict_types=1);
 
 namespace GepurIt\RabbitMqBundle\Configurator;
 
@@ -33,12 +34,13 @@ interface ConfiguratorInterface
 
     /**
      * @param string      $message
-     *
      * @param string|null $routingKey
+     * @param int         $flags
+     * @param array       $attributes
      *
      * @return bool
      */
-    public function publish(string $message, ?string $routingKey = null): bool;
+    public function publish(string $message, ?string $routingKey = null, int $flags = AMQP_NOPARAM, array $attributes = []): bool;
 
     /**
      * @param callable $callback

@@ -3,6 +3,7 @@
  * @author Marina Mileva <m934222258@gmail.com>
  * @since 23.11.17
  */
+declare(strict_types=1);
 
 namespace GepurIt\RabbitMqBundle;
 
@@ -16,14 +17,11 @@ use GepurIt\RabbitMqBundle\Configurator\ConfiguratorInterface;
  */
 class Rabbit implements RabbitInterface
 {
-    /** @var AMQPConnection */
-    private $connection;
-
-    /** @var AMQPChannel|null */
-    private $channel;
+    private AMQPConnection $connection;
+    private ?AMQPChannel $channel = null;
 
     /** @var Cocainum[]  */
-    private $cocainums = [];
+    private array $cocainums = [];
 
     /**
      * Rabbit constructor.
@@ -57,10 +55,12 @@ class Rabbit implements RabbitInterface
      * @param ConfiguratorInterface $configurator
      * @param string                $message
      * @param string|null           $routingKey
+     * @param int                   $flags
+     * @param array                 $attributes
      */
-    public function persist(ConfiguratorInterface $configurator, string $message, ?string $routingKey = null): void
+    public function persist(ConfiguratorInterface $configurator, string $message, ?string $routingKey = null, int $flags = AMQP_NOPARAM, array $attributes = []): void
     {
-        $this->cocainums[] = new Cocainum($configurator, $message, $routingKey);
+        $this->cocainums[] = new Cocainum($configurator, $message, $routingKey, $flags, $attributes);
     }
 
     /**
@@ -69,7 +69,7 @@ class Rabbit implements RabbitInterface
     public function flush(): void
     {
         while ($cocainum = array_shift($this->cocainums)) {
-            $cocainum->getConfigurator()->publish($cocainum->getMessage(), $cocainum->getRoutingKey());
+            $cocainum->getConfigurator()->publish($cocainum->getMessage(), $cocainum->getRoutingKey(), $cocainum->getFlags(), $cocainum->getAttributes());
         }
     }
 
