@@ -3,6 +3,7 @@
  * @author: Andrii yakovlev <yawa20@gmail.com>
  * @since : 19.02.19
  */
+declare(strict_types=1);
 
 namespace GepurIt\RabbitMqBundle;
 
@@ -24,8 +25,10 @@ interface RabbitInterface
      * @param ConfiguratorInterface $configurator
      * @param string                $message
      * @param string|null           $routingKey
+     * @param int                   $flags
+     * @param array                 $attributes
      */
-    public function persist(ConfiguratorInterface $configurator, string $message, ?string $routingKey = null): void;
+    public function persist(ConfiguratorInterface $configurator, string $message, ?string $routingKey = null, int $flags = AMQP_NOPARAM, array $attributes = []): void;
 
     /**
      * Flush all persist messages

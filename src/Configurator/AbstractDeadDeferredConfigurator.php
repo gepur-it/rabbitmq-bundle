@@ -3,6 +3,7 @@
  * @author: Andrii yakovlev <yawa20@gmail.com>
  * @since : 16.11.18
  */
+declare(strict_types=1);
 
 namespace GepurIt\RabbitMqBundle\Configurator;
 
@@ -88,8 +89,9 @@ abstract class AbstractDeadDeferredConfigurator implements ConfiguratorInterface
 
     /**
      * @param string      $message
-     *
      * @param null|string $routingKey
+     * @param null|string $flags
+     * @param array $attributes
      *
      * @return bool
      * @throws \AMQPChannelException
@@ -97,11 +99,11 @@ abstract class AbstractDeadDeferredConfigurator implements ConfiguratorInterface
      * @throws \AMQPExchangeException
      * @throws \AMQPQueueException
      */
-    public function publish(string $message, ?string $routingKey = null): bool
+    public function publish(string $message, ?string $routingKey = null, int $flags = AMQP_NOPARAM, array $attributes = []): bool
     {
         $routingKey = $routingKey ?? $this->getName();
 
-        return $this->getExchange()->publish($message, $routingKey);
+        return $this->getExchange()->publish($message, $routingKey, $flags, $attributes);
     }
 
     /**
@@ -119,12 +121,12 @@ abstract class AbstractDeadDeferredConfigurator implements ConfiguratorInterface
 
     /**
      * @param string      $message
-     * @param null|string $routingKey
-     *
-     * @return void
+     * @param string|null $routingKey
+     * @param int         $flags
+     * @param array       $attributes
      */
-    public function push(string $message, ?string $routingKey = null): void
+    public function push(string $message, ?string $routingKey = null, int $flags = AMQP_NOPARAM, array $attributes = []): void
     {
-        $this->getRabbit()->persist($this, $message, $routingKey);
+        $this->getRabbit()->persist($this, $message, $routingKey, $flags, $attributes);
     }
 }
