@@ -125,7 +125,7 @@ abstract class AbstractDeadDeferredConfigurator implements ConfiguratorInterface
      * @param int         $flags
      * @param array       $attributes
      */
-    public function push(string $message, ?string $routingKey = null, int $flags = AMQP_NOPARAM, array $attributes = []): void
+    public function push(string $message, ?string $routingKey = null, int $flags = AMQP_NOPARAM, array $attributes = ['delivery_mode' => 2]): void
     {
         $this->getRabbit()->persist($this, $message, $routingKey, $flags, $attributes);
     }
