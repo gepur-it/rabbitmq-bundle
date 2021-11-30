@@ -99,7 +99,7 @@ abstract class AbstractDeadDeferredConfigurator implements ConfiguratorInterface
      * @throws \AMQPExchangeException
      * @throws \AMQPQueueException
      */
-    public function publish(string $message, ?string $routingKey = null, int $flags = AMQP_NOPARAM, array $attributes = []): bool
+    public function publish(string $message, ?string $routingKey = null, int $flags = AMQP_NOPARAM, array $attributes = ['delivery_mode' => 2]): bool
     {
         $routingKey = $routingKey ?? $this->getName();
 
